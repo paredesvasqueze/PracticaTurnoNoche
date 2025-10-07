@@ -16,11 +16,19 @@ async function guardarProducto() {
         Stock: parseInt(document.getElementById("Stock").value)
     };
 
+    if (!validar(producto))
+    {
+        return;
+    }
+
+
     const res = await fetch("/ProductoAjax/Guardar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(producto)
     });
+
+    
 
     const data = await res.json();
     /*
@@ -49,6 +57,47 @@ async function guardarProducto() {
         });
     }
 }
+
+function validar(producto) {
+    if (!producto.Nombre) {
+        Swal.fire({
+            icon: "warning",
+            title: "Campo requerido",
+            text: "Debe ingresar el nombre del producto"
+        });
+        return false;
+    }
+
+    if (!producto.Descripcion) {
+        Swal.fire({
+            icon: "warning",
+            title: "Campo requerido",
+            text: "Debe ingresar la descripción del producto"
+        });
+        return false;
+    }
+
+    if (isNaN(producto.Precio) || producto.Precio <= 0) {
+        Swal.fire({
+            icon: "warning",
+            title: "Valor inválido",
+            text: "El precio debe ser un número mayor que cero"
+        });
+        return false;
+    }
+
+    if (isNaN(producto.Stock) || producto.Stock < 0) {
+        Swal.fire({
+            icon: "warning",
+            title: "Valor inválido",
+            text: "El stock no puede ser negativo"
+        });
+        return false;
+    }
+
+    return true;
+}
+
 
 async function eliminarProducto(id) {
     if (!confirm("¿Seguro que deseas eliminar este producto?")) return;

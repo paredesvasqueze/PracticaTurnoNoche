@@ -36,6 +36,26 @@ namespace Web.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    var cMensaje = "";
+                    foreach (var item in ModelState)
+                    {
+                        var field = item.Key;
+                        var errors = item.Value.Errors;
+                        foreach (var error in errors)
+                        {
+                            cMensaje = cMensaje + " " + error.ErrorMessage + "\n";
+                        }
+
+                    }
+
+
+                    return Json(new { success = false, message = cMensaje });
+                }
+
+
+
                 if (producto.Id == 0)
                     await _service.AddAsync(producto);
                 else
