@@ -8,5 +8,6 @@ namespace Data
 {
     class Edwin
     {
+        public string paredes { get; set; } 
     }
 }
