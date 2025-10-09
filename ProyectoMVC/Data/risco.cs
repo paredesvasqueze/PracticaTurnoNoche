@@ -8,5 +8,6 @@ namespace Data
 {
     class risco
     {
+        public string renzo { get; set; }
     }
 }
