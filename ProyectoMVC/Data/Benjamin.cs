@@ -8,5 +8,6 @@ namespace Data
 {
     class Benjamin
     {
+        public string Garcia { get; set; }
     }
 }
