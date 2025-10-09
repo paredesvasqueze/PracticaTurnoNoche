@@ -8,5 +8,6 @@ namespace Data
 {
     class efrain
     {
+        public string garcia { get; set; }
     }
 }
