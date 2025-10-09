@@ -8,5 +8,6 @@ namespace Data
 {
     class Felix
     {
+        public string polo { get; set; }
     }
 }
