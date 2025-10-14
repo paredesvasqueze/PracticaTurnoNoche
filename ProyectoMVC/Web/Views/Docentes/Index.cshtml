@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Models.Docentes>
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Listado de Docentes</h2>
+
+    <div class="text-end mb-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo Docente
+        </a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Especialidad</th>
+                <th>Estado</th>
+                <th style="width:180px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.IdDocente</td>
+                        <td>@item.Nombres</td>
+                        <td>@item.Apellidos</td>
+                        <td>@item.DNI</td>
+                        <td>@item.Email</td>
+                        <td>@item.Telefono</td>
+                        <td>@item.Especialidad</td>
+                        <td>@(item.Estado ? "Activo" : "Inactivo")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdDocente" class="btn btn-sm btn-warning">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.IdDocente" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="9" class="text-center text-muted">No hay docentes registrados.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
