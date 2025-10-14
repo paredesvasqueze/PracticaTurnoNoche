@@ -1,0 +1,26 @@
+﻿@model IEnumerable<SistemaColegioMVC.Models.Matricula>
+
+<h2>Matriculas</h2>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Alumno</th>
+        <th>Grado</th>
+        <th>Fecha</th>
+        <th>Año</th>
+        <th>Estado</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.IdMatricula</td>
+            <td>@item.IdAlumno</td>
+            <td>@item.IdGrado</td>
+            <td>@item.FechaMatricula.ToShortDateString()</td>
+            <td>@item.AñoLectivo</td>
+            <td>@(item.Estado ? "Activa" : "Anulada")</td>
+        </tr>
+    }
+</table>
+<a href="/Matriculas/Create" class="btn btn-primary">Agregar Matrícula</a>
