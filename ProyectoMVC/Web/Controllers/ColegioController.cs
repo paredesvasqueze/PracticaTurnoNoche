@@ -1,20 +1,33 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models;
+using Services;
+using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
     public class ColegioController : Controller
     {
-        // GET: ColegioController
-        public ActionResult Index()
+        private readonly IColegioService _service;
+
+        public ColegioController(IColegioService service)
         {
-            return View();
+            _service = service;
+        }
+
+        // GET: ColegioController
+        public async Task<IActionResult> Index()
+        {
+            var colegios = await _service.GetAllAsync();
+            return View(colegios);
         }
 
         // GET: ColegioController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var colegio = await _service.GetByIdAsync(id);
+            if (colegio == null) return NotFound();
+            return View(colegio);
         }
 
         // GET: ColegioController/Create
@@ -26,58 +39,51 @@ namespace Web.Controllers
         // POST: ColegioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(Colegio colegio)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid)
+                return View(colegio);
+
+            await _service.AddAsync(colegio);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ColegioController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var colegio = await _service.GetByIdAsync(id);
+            if (colegio == null) return NotFound();
+            return View(colegio);
         }
 
         // POST: ColegioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Colegio colegio)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid)
+                return View(colegio);
+
+            await _service.UpdateAsync(colegio);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ColegioController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            // Opcional: mostrar confirmación con la entidad
+            var colegio = await _service.GetByIdAsync(id);
+            if (colegio == null) return NotFound();
+            return View(colegio);
         }
 
         // POST: ColegioController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

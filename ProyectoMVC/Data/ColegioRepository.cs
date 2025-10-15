@@ -34,7 +34,7 @@ namespace Data
             using var conn = new SqlConnection(_connectionString);
             return await conn.QueryFirstOrDefaultAsync<Colegio>(
                 "sp_Colegio_GetById",
-                new { Id = id },
+                new { IdColegio = id },
                 commandType: CommandType.StoredProcedure
             );
         }
@@ -83,7 +83,7 @@ namespace Data
             using var conn = new SqlConnection(_connectionString);
             await conn.ExecuteAsync(
                 "sp_Colegio_Delete",
-                new { Id = id },
+                new { IdColegio = id },
                 commandType: CommandType.StoredProcedure
             );
         }

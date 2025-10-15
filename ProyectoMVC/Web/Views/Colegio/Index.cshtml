@@ -1,5 +1,70 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Models.Colegio>
+
 @{
+    ViewData["Title"] = "Colegio";
+}
+    
+
+<h1>Colegios</h1>
+
+<p>
+    <a class="btn btn-primary" asp-controller="Colegio" asp-action="Create">Crear Nuevo</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>RUC</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Director</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || !Model.Any())
+        {
+            <tr>
+                <td colspan="9" class="text-center">No hay colegios registrados.</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdColegio</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.RUC</td>
+                    <td>@item.Direccion</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Email</td>
+                    <td>@item.Director</td>
+                    <td>@(item.Estado ? "Activo" : "Inactivo")</td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" asp-controller="Colegio" asp-action="Edit" asp-route-id="@item.IdColegio">Editar</a>
+                        <a class="btn btn-sm btn-info" asp-controller="Colegio" asp-action="Details" asp-route-id="@item.IdColegio">Detalles</a>
+                        <form asp-controller="Colegio" asp-action="Delete" asp-route-id="@item.IdColegio" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar este colegio?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        // Si prefieres usar SweetAlert2 para confirmación, reemplaza el confirm() anterior.
+        // Ejemplo breve (opcional):
+        // function confirmDelete(form) {
+        //     if (confirm('¿Eliminar este colegio?')) form.submit();
+        //     return false;
+        // }
+    </script>
 }

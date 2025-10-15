@@ -3,8 +3,12 @@ using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Registrar repositorios y servicios
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductoService, ProductoServiceDb>();
+
+builder.Services.AddScoped<IColegioRepository, ColegioRepository>();
+builder.Services.AddScoped<IColegioService, ColegioServiceDb>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
