@@ -1,0 +1,254 @@
+﻿@model IEnumerable<Models.Colegio>
+
+@{
+    ViewData["Title"] = "Gestión de Colegios";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>@ViewData["Title"]</h2>
+        <div>
+            <button class="btn btn-primary" type="button" onclick="openForm(0)">
+                <i class="bi bi-plus-circle"></i> Nuevo Colegio
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor de alertas dinámicas -->
+    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
+
+    <div id="listaColegios">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>RUC</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Director</th>
+                    <th>Estado</th>
+                    <th style="width:190px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="text-center">No hay colegios registrados.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr id="row-@item.IdColegio">
+                            <td>@item.IdColegio</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.RUC</td>
+                            <td>@item.Direccion</td>
+                            <td>@item.Telefono</td>
+                            <td>@item.Email</td>
+                            <td>@item.Director</td>
+                            <td>@(item.Estado ? "Activo" : "Inactivo")</td>
+                            <td class="text-nowrap">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="openForm(@item.IdColegio)">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </button>
+                                <button class="btn btn-sm btn-info" type="button" onclick="openForm(@item.IdColegio)">
+                                    <i class="bi bi-eye"></i> Detalles
+                                </button>
+                                <button class="btn btn-sm btn-danger" type="button" onclick="confirmEliminar(@item.IdColegio)">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para formulario -->
+<div class="modal fade" id="coleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="coleModalTitle">Colegio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="coleModalBody">
+                <!-- El partial _FormularioColegio se cargará aquí -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Anti-forgery token utilizable por JS -->
+<div id="tokenDiv" class="d-none">
+    @Html.AntiForgeryToken()
+</div>
+
+@section Scripts {
+    <script>
+        const modalEl = document.getElementById('coleModal');
+        let coleModal;
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof bootstrap !== 'undefined') {
+                coleModal = new bootstrap.Modal(modalEl);
+            }
+        });
+
+        function getToken() {
+            const tokenInput = document.querySelector('#tokenDiv input[name="__RequestVerificationToken"]');
+            return tokenInput ? tokenInput.value : '';
+        }
+
+        // Muestra alertas temporales (Bootstrap alert), tipo: 'success' | 'danger' | 'warning' | 'info'
+        function showAlert(type, message, timeout = 3000) {
+            const container = document.getElementById('alertContainer');
+            if (!container) return;
+
+            const alertId = 'alert-' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.id = alertId;
+            wrapper.className = `toast align-items-center text-bg-${type} border-0`;
+            wrapper.role = 'alert';
+            wrapper.ariaLive = 'assertive';
+            wrapper.ariaAtomic = 'true';
+            wrapper.style.minWidth = '250px';
+
+            // Toast body
+            wrapper.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body text-white">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+                </div>
+            `;
+
+            container.appendChild(wrapper);
+
+            // Inicializar como toast de bootstrap si disponible
+            if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+                const toast = new bootstrap.Toast(wrapper, { delay: timeout });
+                toast.show();
+                // Remover elemento cuando termine
+                wrapper.addEventListener('hidden.bs.toast', () => wrapper.remove());
+            } else {
+                // fallback: desaparecer con timeout
+                setTimeout(() => wrapper.remove(), timeout);
+            }
+        }
+
+        async function openForm(id) {
+            try {
+                const url = id && id !== 0 ? `/ColegioAjax/Form?id=${id}` : '/ColegioAjax/Form';
+                const res = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!res.ok) throw new Error('Error al cargar el formulario.');
+                const html = await res.text();
+                document.getElementById('coleModalBody').innerHTML = html;
+
+                // Establecer título
+                document.getElementById('coleModalTitle').textContent = id && id !== 0 ? 'Editar / Ver Colegio' : 'Nuevo Colegio';
+
+                // Adjuntar manejador de envío al form cargado (el partial contiene form con id="formColegio")
+                const form = document.getElementById('formColegio');
+                if (form) {
+                    // Remover posibles listeners previos
+                    form.removeEventListener('submit', submitColegioForm);
+                    form.addEventListener('submit', submitColegioForm);
+                }
+
+                // Inicializar validación si el partial provee la función
+                if (typeof setupColegioValidation === 'function') setupColegioValidation();
+
+                // Mostrar modal
+                coleModal?.show();
+            } catch (err) {
+                console.error(err);
+                showAlert('danger', err.message || 'No se pudo cargar el formulario.');
+            }
+        }
+
+        // Callback global que puede usar el partial al guardar (partial llama a onColegioSaved)
+        function onColegioSaved(message = 'Guardado correctamente') {
+            coleModal?.hide();
+            showAlert('success', message, 2500);
+            // refrescar lista después de una pequeña demora para que el usuario vea el mensaje
+            setTimeout(() => location.reload(), 800);
+        }
+
+        async function submitColegioForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const obj = {};
+            formData.forEach((value, key) => {
+                if (key === 'Estado') {
+                    const el = form.querySelector('#Estado');
+                    obj[key] = el ? el.checked : (value === 'on');
+                } else {
+                    obj[key] = value;
+                }
+            });
+            if (obj.IdColegio) obj.IdColegio = parseInt(obj.IdColegio);
+
+            try {
+                const res = await fetch('/ColegioAjax/Guardar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': getToken()
+                    },
+                    body: JSON.stringify(obj)
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    // Usar el helper para mostrar mensaje y refrescar
+                    onColegioSaved(data.message || 'Guardado correctamente');
+                } else {
+                    showAlert('danger', data.message || 'Error al guardar.', 5000);
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert('danger', err.message || 'Error de red al guardar.', 5000);
+            }
+        }
+
+        async function confirmEliminar(id) {
+            if (!confirm('¿Eliminar este colegio?')) return;
+            try {
+                const params = new URLSearchParams();
+                params.append('id', id);
+                const res = await fetch('/ColegioAjax/Eliminar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': getToken()
+                    },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // Mostrar mensaje y eliminar fila sin recargar
+                    showAlert('success', data.message || 'Eliminado correctamente', 2500);
+                    const row = document.getElementById(`row-${id}`);
+                    row?.remove();
+                } else {
+                    showAlert('danger', data.message || 'Error al eliminar.', 5000);
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert('danger', err.message || 'Error de red al eliminar.', 5000);
+            }
+        }
+    </script>
+}
