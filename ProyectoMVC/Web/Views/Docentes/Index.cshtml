@@ -1,12 +1,15 @@
 ﻿@model IEnumerable<Models.Docentes>
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Listado de Docentes</h2>
+    <h2 class="text-center mb-3">Gestión de Docentes</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
 
     <div class="text-end mb-3">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Nuevo Docente
-        </a>
+        <a asp-action="Create" class="btn btn-primary">➕ Nuevo Docente</a>
     </div>
 
     <table class="table table-bordered table-striped">
@@ -16,15 +19,14 @@
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>DNI</th>
-                <th>Email</th>
                 <th>Teléfono</th>
                 <th>Especialidad</th>
                 <th>Estado</th>
-                <th style="width:180px;">Acciones</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @if (Model != null && Model.Any())
+            @if (Model.Any())
             {
                 foreach (var item in Model)
                 {
@@ -33,7 +35,6 @@
                         <td>@item.Nombres</td>
                         <td>@item.Apellidos</td>
                         <td>@item.DNI</td>
-                        <td>@item.Email</td>
                         <td>@item.Telefono</td>
                         <td>@item.Especialidad</td>
                         <td>@(item.Estado ? "Activo" : "Inactivo")</td>
@@ -46,7 +47,7 @@
             }
             else
             {
-                <tr><td colspan="9" class="text-center text-muted">No hay docentes registrados.</td></tr>
+                <tr><td colspan="8" class="text-center text-muted">No hay docentes registrados.</td></tr>
             }
         </tbody>
     </table>

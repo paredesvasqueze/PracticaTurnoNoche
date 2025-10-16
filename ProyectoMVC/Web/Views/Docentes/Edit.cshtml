@@ -4,5 +4,5 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="IdDocente" />
-    @Html.Partial("Create", Model)
+    <partial name="Create" model="Model" />
 </form>

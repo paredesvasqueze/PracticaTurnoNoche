@@ -30,6 +30,7 @@ namespace Web.Controllers
                 return View(docente);
 
             await _service.AddAsync(docente);
+            TempData["Success"] = "Docente registrado correctamente.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -48,6 +49,7 @@ namespace Web.Controllers
                 return View(docente);
 
             await _service.UpdateAsync(docente);
+            TempData["Success"] = "Datos del docente actualizados correctamente.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -58,11 +60,13 @@ namespace Web.Controllers
             return View(docente);
         }
 
+        // POST: Docentes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _service.DeleteAsync(id);
+            TempData["Success"] = "Docente eliminado correctamente.";
             return RedirectToAction(nameof(Index));
         }
     }
