@@ -1,0 +1,132 @@
+﻿@model IEnumerable<Models.Docentes>
+
+@{
+    ViewData["Title"] = "Gestión de Docentes";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="text-end mb-3">
+        <button class="btn btn-primary" onclick="abrirFormularioDocente()">
+            <i class="bi bi-plus-circle"></i> Nuevo Docente
+        </button>
+    </div>
+
+    <table class="table table-bordered" id="tablaDocentes">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Id Colegio</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Especialidad</th>
+                <th>Fecha Ingreso</th>
+                <th>Estado</th>
+                <th style="width:160px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model)
+            {
+                <tr id="fila-@d.IdDocente">
+                    <td>@d.IdDocente</td>
+                    <td>@d.IdColegio</td>
+                    <td>@d.Nombres</td>
+                    <td>@d.Apellidos</td>
+                    <td>@d.DNI</td>
+                    <td>@d.Email</td>
+                    <td>@d.Telefono</td>
+                    <td>@d.Especialidad</td>
+                    <td>@d.FechaIngreso.ToString("yyyy-MM-dd")</td>
+                    <td>@(d.Estado ? "Activo" : "Inactivo")</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="abrirFormularioDocente(@d.IdDocente)">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarDocente(@d.IdDocente)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h5>DISEÑADOR: FELIX POLO BENTURA</h5>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalDocente" tabindex="-1" aria-labelledby="modalDocenteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Docente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="contenidoModalDocente">
+                <!-- Formulario se carga aquí -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function abrirFormularioDocente(id = 0) {
+            $.get(`/DocentesAjax/Form?id=${id}`, function (html) {
+                $("#contenidoModalDocente").html(html);
+                var modal = new bootstrap.Modal(document.getElementById('modalDocente'));
+                modal.show();
+            });
+        }
+
+        function guardarDocente() {
+            const docente = {
+                IdDocente: parseInt($("#IdDocente").val()) || 0,
+                IdColegio: parseInt($("#IdColegio").val()) || 0,
+                Nombres: $("#Nombres").val(),
+                Apellidos: $("#Apellidos").val(),
+                DNI: $("#DNI").val(),
+                Email: $("#Email").val(),
+                Telefono: $("#Telefono").val(),
+                Especialidad: $("#Especialidad").val(),
+                FechaIngreso: $("#FechaIngreso").val(),
+                Estado: $("#Estado").is(":checked")
+            };
+
+            $.ajax({
+                url: '/DocentesAjax/Guardar',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(docente),
+                success: function (resp) {
+                    if (resp.success) {
+                        var modalEl = document.getElementById('modalDocente');
+                        var modal = bootstrap.Modal.getInstance(modalEl);
+                        modal.hide();
+                        location.reload();
+                    } else {
+                        alert(resp.message || "Error al guardar el docente.");
+                    }
+                },
+                error: function () {
+                    alert("Error inesperado al guardar el docente.");
+                }
+            });
+        }
+
+        function eliminarDocente(id) {
+            if (!confirm("¿Desea eliminar este docente?")) return;
+
+            $.post('/DocentesAjax/Eliminar', { id }, function (resp) {
+                if (resp.success) {
+                    location.reload();
+                } else {
+                    alert(resp.message || "Error al eliminar el docente.");
+                }
+            });
+        }
+    </script>
+}

@@ -29,3 +29,360 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+/* docentes.css - Estilos unificados */
+
+/* Base y tipografía */
+body, html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    color: #2e2e2e;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 95%;
+    margin: 2rem auto;
+    padding: 0 20px;
+    overflow-x: auto;
+}
+
+/* Título */
+h2 {
+    color: #c62828;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 0 0 3px rgba(198, 40, 40, 0.6);
+}
+
+/* Botón nuevo */
+.btn-primary {
+    background: linear-gradient(90deg, #c62828 0%, #e53935 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 10px 24px;
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #b71c1c 0%, #d32f2f 100%);
+        box-shadow: 0 8px 20px rgba(183, 28, 28, 0.6);
+        transform: translateY(-2px);
+        cursor: pointer;
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+/* Contenedor de tabla con scroll horizontal */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+/* Tabla */
+#tablaDocentes {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+    font-weight: 500;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(66, 66, 66, 0.15);
+}
+
+    #tablaDocentes thead tr {
+        background: linear-gradient(135deg, #424242 0%, #616161 100%);
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    #tablaDocentes th, #tablaDocentes td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    #tablaDocentes th {
+        position: sticky;
+        top: 0;
+        background: linear-gradient(135deg, #424242 0%, #616161 100%);
+        z-index: 10;
+    }
+
+    #tablaDocentes tbody tr {
+        background: white;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        #tablaDocentes tbody tr:hover {
+            background-color: #ffebee;
+            transform: scale(1.01);
+            cursor: pointer;
+        }
+
+        #tablaDocentes tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        #tablaDocentes tbody tr td:last-child {
+            white-space: nowrap;
+        }
+
+/* Botones generales */
+.btn {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border-radius: 25px;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Botones en tabla */
+#tablaDocentes tbody tr td button {
+    margin-right: 6px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+}
+
+    #tablaDocentes tbody tr td button.btn-success {
+        background: #28a745;
+        color: white;
+        box-shadow: 0 3px 6px rgba(40, 167, 69, 0.3);
+    }
+
+        #tablaDocentes tbody tr td button.btn-success:hover {
+            background: #218838;
+            transform: scale(1.08);
+        }
+
+    #tablaDocentes tbody tr td button.btn-warning {
+        background: #c62828;
+        color: white;
+        box-shadow: 0 3px 6px rgba(198, 40, 40, 0.3);
+    }
+
+        #tablaDocentes tbody tr td button.btn-warning:hover {
+            background: #b71c1c;
+            transform: scale(1.08);
+        }
+
+    #tablaDocentes tbody tr td button.btn-danger {
+        background: #616161;
+        color: white;
+        box-shadow: 0 3px 6px rgba(97, 97, 97, 0.3);
+    }
+
+        #tablaDocentes tbody tr td button.btn-danger:hover {
+            background: #424242;
+            transform: scale(1.08);
+        }
+
+/* Modal styling */
+.modal-content {
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 12px 30px rgba(66, 66, 66, 0.25);
+    background-color: white;
+    border: 2px solid #e0e0e0;
+}
+
+.modal-header {
+    border-bottom: 2px solid #c62828;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+    .modal-header .modal-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #c62828;
+    }
+
+/* Formulario */
+form#formDocente input.form-control,
+form#formDocente select.form-control,
+form#formDocente textarea.form-control {
+    border-radius: 10px;
+    border: 1.8px solid #bdbdbd;
+    padding: 12px 15px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    color: #424242;
+}
+
+    form#formDocente input.form-control:focus,
+    form#formDocente select.form-control:focus,
+    form#formDocente textarea.form-control:focus {
+        outline: none;
+        border-color: #c62828;
+        box-shadow: 0 0 12px rgba(198, 40, 40, 0.5);
+    }
+
+/* Checkbox */
+form#formDocente input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 5px;
+    accent-color: #c62828;
+}
+
+/* Labels */
+form#formDocente label {
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+    color: #424242;
+}
+
+/* Margen entre campos */
+form#formDocente .mb-3,
+.mb-3 {
+    margin-bottom: 1.25rem;
+}
+
+/* Botones en formulario */
+form#formDocente .text-end button,
+.text-end button {
+    min-width: 110px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background-color 0.25s ease;
+}
+
+/* Botón secundario del formulario */
+form#formDocente .btn-secondary {
+    background: #757575;
+    color: white;
+    border: none;
+}
+
+    form#formDocente .btn-secondary:hover {
+        background: #616161;
+    }
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .container {
+        max-width: 98%;
+    }
+
+    #tablaDocentes {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+        max-width: 100%;
+    }
+
+    #tablaDocentes th, #tablaDocentes td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    #tablaDocentes tbody tr td button {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+        margin-right: 4px;
+    }
+}
+
+h5 {
+    font-size: 1.2em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #d32f2f, #ff5252, #c62828, #ff1744);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite, float 3s ease-in-out infinite;
+    text-align: center;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 4px rgba(211, 47, 47, 0.1);
+    position: relative;
+}
+
+    h5::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #d32f2f, transparent);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+        width: 60%;
+    }
+
+    50% {
+        opacity: 1;
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    h5 {
+        font-size: 1em;
+    }
+}
