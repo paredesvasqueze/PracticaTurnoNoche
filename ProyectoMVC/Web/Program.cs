@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductoService, ProductoServiceDb>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+builder.Services.AddScoped<ICursoService, CursoServiceDb>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

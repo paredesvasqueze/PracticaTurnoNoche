@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Models.Curso>
+@using System.Linq
+@{
+    ViewData["Title"] = "Listado de Cursos";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+
+    <div class="text-end mb-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo Curso
+        </a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>IdCurso</th>
+                <th>IdGrado</th>
+                <th>NombreCurso</th>
+                <th>HorasSemanales</th>
+                <th>DocenteEncargado</th>
+                <th>Estado</th>
+                <th style="width:160px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.IdCurso</td>
+                        <td>@item.IdGrado</td>
+                        <td>@item.NombreCurso</td>
+                        <td>@item.HorasSemanales</td>
+                        <td>@item.DocenteEncargado</td>
+                        <td>
+                            @if (item.Estado)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdCurso" class="btn btn-sm btn-warning">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@item.IdCurso" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No hay cursos registrados.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,46 @@
+﻿@model Models.Curso
+@{
+    ViewData["Title"] = "Crear Curso";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post" class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="NombreCurso" class="form-label"></label>
+        <input asp-for="NombreCurso" class="form-control" />
+        <span asp-validation-for="NombreCurso" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="HorasSemanales" class="form-label"></label>
+        <input asp-for="HorasSemanales" type="number" class="form-control" />
+        <span asp-validation-for="HorasSemanales" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="IdGrado" class="form-label">Id Grado</label>
+        <input asp-for="IdGrado" type="number" class="form-control" />
+        <span asp-validation-for="IdGrado" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="DocenteEncargado" class="form-label">Id Docente</label>
+        <input asp-for="DocenteEncargado" type="number" class="form-control" />
+        <span asp-validation-for="DocenteEncargado" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3 form-check">
+        <input asp-for="Estado" class="form-check-input" />
+        <label asp-for="Estado" class="form-check-label">Activo</label>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
