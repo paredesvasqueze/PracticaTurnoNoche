@@ -23,7 +23,7 @@ namespace Models
         public bool Estado { get; set; } = true;
 
         // Propiedades auxiliares para visualización
-        public string NombreGrado { get; set; }
-        public string NombreDocente { get; set; }
+        public string? NombreGrado { get; set; }
+        public string? NombreDocente { get; set; }
     }
 }
