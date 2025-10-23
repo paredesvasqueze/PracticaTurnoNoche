@@ -14,5 +14,6 @@ namespace Data
         Task AddAsync(Producto producto);
         Task UpdateAsync(Producto producto);
         Task DeleteAsync(int id);
+        Task<IEnumerable<Categoria>> GetCategoriaAllAsync();
     }
 }

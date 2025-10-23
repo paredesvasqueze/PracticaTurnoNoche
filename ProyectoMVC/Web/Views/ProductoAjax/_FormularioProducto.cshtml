@@ -18,7 +18,20 @@
         <label class="form-label">Stock</label>
         <input class="form-control" id="Stock" type="number" value="@Model.Stock" />
     </div>
-
+    <div class="mb-3">
+        <label class="form-label">Categoría</label>
+        <select class="form-select" id="CategoriaId">
+            <option value="">Seleccione una categoría</option>
+            @{
+                var categorias = ViewBag.Categorias as IEnumerable<Models.Categoria> ?? new List<Models.Categoria>();
+            }
+            @foreach (var categoria in categorias)
+            {
+                <option value="@categoria.CategoriaId"
+                        @(categoria.Id == Model.CategoriaId ? "selected" : "")>@categoria.Nombre</option>
+            }
+        </select>
+    </div>
     <div class="text-end">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-success" onclick="guardarProducto()">Guardar</button>

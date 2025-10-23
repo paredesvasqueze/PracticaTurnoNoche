@@ -20,15 +20,16 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Form(int? id)
+        public async Task<IActionResult> Form(int? id)
         {
-            if (id == null || id == 0 )
+            // Poblar ViewBag.Categorias para que el partial tenga opciones
+            ViewBag.Categorias = (await _service.GetCategoriaAllAsync())?.ToList() ?? new List<Categoria>();
+
+            if (id == null || id == 0)
                 return PartialView("_FormularioProducto", new Producto());
-            else
-            {
-                var producto = _service.GetByIdAsync(id.Value).Result;
-                return PartialView("_FormularioProducto", producto);
-            }
+            var producto = await _service.GetByIdAsync(id.Value);
+            if (producto == null) return NotFound();
+            return PartialView("_FormularioProducto", producto);
         }
 
         [HttpPost]

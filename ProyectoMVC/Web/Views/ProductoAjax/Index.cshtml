@@ -23,6 +23,7 @@
                 <th>Descripción</th>
                 <th>Precio</th>
                 <th>Stock</th>
+                <th>Categoria</th>
                 <th style="width:160px;">Acciones</th>
             </tr>
         </thead>
@@ -35,6 +36,7 @@
                     <td>@p.Descripcion</td>
                     <td>@p.Precio</td>
                     <td>@p.Stock</td>
+                    <td>@p.CNombreCategoria</td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="abrirFormulario(@p.Id)">Editar</button>
                         <button class="btn btn-sm btn-danger" onclick="eliminarProducto(@p.Id)">Eliminar</button>

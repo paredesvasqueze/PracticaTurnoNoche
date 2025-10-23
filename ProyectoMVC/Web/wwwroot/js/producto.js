@@ -13,7 +13,8 @@ async function guardarProducto() {
         Nombre: document.getElementById("Nombre").value,
         Descripcion: document.getElementById("Descripcion").value,
         Precio: parseFloat(document.getElementById("Precio").value),
-        Stock: parseInt(document.getElementById("Stock").value)
+        Stock: parseInt(document.getElementById("Stock").value),
+        CategoriaId: parseInt(document.getElementById("CategoriaId").value || 0)
     };
 
     if (!validar(producto))

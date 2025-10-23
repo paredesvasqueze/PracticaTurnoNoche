@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Services;
 
@@ -19,8 +20,9 @@ namespace Web.Controllers
             return View(productos);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await PopulateCategoriasViewBagAsync();
             return View();
         }
 
@@ -29,16 +31,22 @@ namespace Web.Controllers
         public async Task<IActionResult> Create(Producto producto)
         {
             if (!ModelState.IsValid)
+            {
+                await PopulateCategoriasViewBagAsync();
                 return View(producto);
+            }
 
             await _service.AddAsync(producto);
             return RedirectToAction(nameof(Index));
         }
-
+            
+        
         public async Task<IActionResult> Edit(int id)
         {
             var producto = await _service.GetByIdAsync(id);
             if (producto == null) return NotFound();
+
+            await PopulateCategoriasViewBagAsync();
             return View(producto);
         }
 
@@ -47,7 +55,10 @@ namespace Web.Controllers
         public async Task<IActionResult> Edit(Producto producto)
         {
             if (!ModelState.IsValid)
+            {
+                await PopulateCategoriasViewBagAsync();
                 return View(producto);
+            }
 
             await _service.UpdateAsync(producto);
             return RedirectToAction(nameof(Index));
@@ -72,6 +83,19 @@ namespace Web.Controllers
         {
             await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // Método auxiliar para cargar categorías en ViewBag.Categorias
+        private async Task PopulateCategoriasViewBagAsync()
+        {
+            var categorias = await _service.GetCategoriaAllAsync();
+            ViewBag.Categorias = categorias
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CategoriaId.ToString(),
+                    Text = c.Nombre
+                })
+                .ToList();
         }
     }
 }
