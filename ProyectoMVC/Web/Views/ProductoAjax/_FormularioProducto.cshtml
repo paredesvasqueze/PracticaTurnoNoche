@@ -27,8 +27,12 @@
             }
             @foreach (var categoria in categorias)
             {
-                <option value="@categoria.CategoriaId"
-                        @(categoria.Id == Model.CategoriaId ? "selected" : "")>@categoria.Nombre</option>
+               
+
+                //<option value="@categoria.CategoriaId" selected="@(categoria.CategoriaId == Model.CategoriaId ? "selected" : null)">@categoria.Nombre</option>
+                <option value="@categoria.CategoriaId" selected="@(categoria.CategoriaId == Model.CategoriaId ? "selected" : null)">@categoria.Nombre</option>
+                        //@(categoria.Id == Model.CategoriaId ? "selected" : "")>@categoria.Nombre</option>
+                        //@(categoria.Id == Model.CategoriaId ? "selected" : "")>@categoria.Nombre</option>
             }
         </select>
     </div>
