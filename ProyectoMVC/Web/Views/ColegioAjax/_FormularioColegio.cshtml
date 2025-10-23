@@ -50,23 +50,22 @@
 
     <div class="text-end">
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <!-- Usar data-bs-dismiss para cerrar modal con Bootstrap; mantiene compatibilidad si el script no se ejecuta -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Cancelar</button>
     </div>
 </form>
 
 @section Scripts {
     <script>
-        async function submitColegio(form) {
-            // Construir objeto desde los campos del formulario
+        // Exponer funciones en window para asegurar disponibilidad si el script se evalúa
+        window.submitColegio = async function (form) {
             const tokenInput = form.querySelector('input[name="__RequestVerificationToken"]');
             const token = tokenInput ? tokenInput.value : '';
 
             const formData = new FormData(form);
             const obj = {};
             formData.forEach((value, key) => {
-                // checkbox Estado puede aparecer como "on" o no según su estado; manejar explícitamente
                 if (key === 'Estado') {
-                    // Tomar el checked real del checkbox
                     const el = form.querySelector('#Estado');
                     obj[key] = el ? el.checked : (value === 'on');
                 } else {
@@ -74,7 +73,6 @@
                 }
             });
 
-            // Convertir IdColegio a number
             if (obj.IdColegio) obj.IdColegio = parseInt(obj.IdColegio);
 
             try {
@@ -89,7 +87,6 @@
 
                 const data = await res.json();
                 if (data.success) {
-                    // Actualiza la UI según tu implementación: cerrar modal, recargar lista, mostrar toast...
                     if (typeof onColegioSaved === 'function') onColegioSaved();
                     else location.reload();
                 } else {
@@ -100,45 +97,40 @@
                 alert(err.message || 'Error de red al guardar.');
             }
 
-            return false; // evitar submit tradicional
-        }
+            return false;
+        };
 
-        function closeModal() {
-            // Placeholder: cierra modal si usas uno. Ajusta según implementación.
+        window.closeModal = function () {
+            // Si Bootstrap está presente, delega en data-bs-dismiss; aquí por compatibilidad
             if (typeof bootstrap !== 'undefined') {
                 const modalEl = document.querySelector('.modal.show');
                 if (modalEl) {
                     const modal = bootstrap.Modal.getInstance(modalEl);
                     modal?.hide();
+                    return;
                 }
             }
-        }
+            // Si no hay Bootstrap, intenta ocultar elemento padre con clase .modal manualmente
+            const modalEl = document.querySelector('.modal.show');
+            if (modalEl) modalEl.classList.remove('show');
+        };
 
-        // Inicializa validación de cliente para el formulario cargado dinámicamente.
-        // Llamar a setupColegioValidation() desde el código que inserta este partial (Index) justo después de innerHTML = html.
-        function setupColegioValidation() {
+        window.setupColegioValidation = function () {
             const form = document.getElementById('formColegio');
             if (!form) return;
 
-            // Si está disponible jQuery + unobtrusive, parsea los atributos data-val para activar validación
             if (window.jQuery && jQuery.validator && jQuery.validator.unobtrusive) {
                 $.validator.unobtrusive.parse(form);
             }
 
-            // Añadir comprobación HTML5 + clases de Bootstrap para feedback visual
-            // (no evita la ejecución del submit handler definido en Index; solo previene envíos inválidos)
             form.addEventListener('submit', function (e) {
                 if (!form.checkValidity()) {
                     e.preventDefault();
                     e.stopPropagation();
                     form.classList.add('was-validated');
-                    // mostrar resumen de validación si hay errores
-                    const summary = form.querySelector('[asp-validation-summary]') || form.querySelector('div[role="alert"]');
-                    // no hacemos más aquí; submitColegio también puede validar antes de enviar
                     return false;
                 }
-                // si es válido, dejar que submitColegio maneje el envío AJAX
             }, false);
-        }
+        };
     </script>
 }

@@ -26,6 +26,12 @@ namespace Models
 
         [Range(0, 1000, ErrorMessage = "El stock debe ser al menos 0")]
         public int Stock { get; set; }
+
+        [Required(ErrorMessage = "La categoría es obligatoria")]
+        public int CategoriaId { get; set; }
+
+        public string? CNombreCategoria { get; set; }
+
     }
 
 }

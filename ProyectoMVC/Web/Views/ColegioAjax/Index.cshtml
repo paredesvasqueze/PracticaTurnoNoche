@@ -4,80 +4,83 @@
     ViewData["Title"] = "Gestión de Colegios";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>@ViewData["Title"]</h2>
-        <div>
-            <button class="btn btn-primary" type="button" onclick="openForm(0)">
-                <i class="bi bi-plus-circle"></i> Nuevo Colegio
-            </button>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h4 mb-0">@ViewData["Title"]</h2>
+        <small class="text-muted">Administración dinámica con modal</small>
     </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-primary" type="button" onclick="openForm(0)">+ Nuevo Colegio</button>
+        <a asp-controller="Colegio" asp-action="Index" class="btn btn-outline-secondary">Ver lista (No-AJAX)</a>
+    </div>
+</div>
 
-    <!-- Contenedor de alertas dinámicas -->
-    <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
+<!-- Contenedor de alertas dinámicas -->
+<div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
 
-    <div id="listaColegios">
-        <table class="table table-striped table-bordered">
-            <thead>
+<div class="table-responsive bg-white rounded-3 shadow-sm p-3">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th class="small">Id</th>
+                <th>Nombre</th>
+                <th class="small">RUC</th>
+                <th>Dirección</th>
+                <th class="small">Teléfono</th>
+                <th>Email</th>
+                <th>Director</th>
+                <th class="small">Estado</th>
+                <th class="text-end small" style="width:190px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
                 <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>RUC</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>Director</th>
-                    <th>Estado</th>
-                    <th style="width:190px;">Acciones</th>
+                    <td colspan="9" class="text-center py-4 text-muted">No hay colegios registrados.</td>
                 </tr>
-            </thead>
-            <tbody>
-                @if (Model == null || !Model.Any())
+            }
+            else
+            {
+                foreach (var item in Model)
                 {
-                    <tr>
-                        <td colspan="9" class="text-center">No hay colegios registrados.</td>
+                    <tr id="row-@item.IdColegio">
+                        <td class="small text-muted">@item.IdColegio</td>
+                        <td>@item.Nombre</td>
+                        <td class="small">@item.RUC</td>
+                        <td>@item.Direccion</td>
+                        <td class="small">@item.Telefono</td>
+                        <td>@item.Email</td>
+                        <td>@item.Director</td>
+                        <td>
+                            @if (item.Estado)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary me-1" type="button" onclick="openForm(@item.IdColegio)">Editar</button>
+                            <button class="btn btn-sm btn-info text-white me-1" type="button" onclick="openForm(@item.IdColegio)">Detalles</button>
+                            <button class="btn btn-sm btn-danger" type="button" onclick="confirmEliminar(@item.IdColegio)">Eliminar</button>
+                        </td>
                     </tr>
                 }
-                else
-                {
-                    foreach (var item in Model)
-                    {
-                        <tr id="row-@item.IdColegio">
-                            <td>@item.IdColegio</td>
-                            <td>@item.Nombre</td>
-                            <td>@item.RUC</td>
-                            <td>@item.Direccion</td>
-                            <td>@item.Telefono</td>
-                            <td>@item.Email</td>
-                            <td>@item.Director</td>
-                            <td>@(item.Estado ? "Activo" : "Inactivo")</td>
-                            <td class="text-nowrap">
-                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="openForm(@item.IdColegio)">
-                                    <i class="bi bi-pencil-square"></i> Editar
-                                </button>
-                                <button class="btn btn-sm btn-info" type="button" onclick="openForm(@item.IdColegio)">
-                                    <i class="bi bi-eye"></i> Detalles
-                                </button>
-                                <button class="btn btn-sm btn-danger" type="button" onclick="confirmEliminar(@item.IdColegio)">
-                                    <i class="bi bi-trash"></i> Eliminar
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
 </div>
 
 <!-- Modal para formulario -->
 <div class="modal fade" id="coleModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background: linear-gradient(90deg, var(--brand-1), var(--brand-2)); color: #fff;">
                 <h5 class="modal-title" id="coleModalTitle">Colegio</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body" id="coleModalBody">
                 <!-- El partial _FormularioColegio se cargará aquí -->
@@ -106,7 +109,6 @@
             return tokenInput ? tokenInput.value : '';
         }
 
-        // Muestra alertas temporales (Bootstrap alert), tipo: 'success' | 'danger' | 'warning' | 'info'
         function showAlert(type, message, timeout = 3000) {
             const container = document.getElementById('alertContainer');
             if (!container) return;
@@ -120,7 +122,6 @@
             wrapper.ariaAtomic = 'true';
             wrapper.style.minWidth = '250px';
 
-            // Toast body
             wrapper.innerHTML = `
                 <div class="d-flex">
                     <div class="toast-body text-white">
@@ -132,14 +133,11 @@
 
             container.appendChild(wrapper);
 
-            // Inicializar como toast de bootstrap si disponible
             if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
                 const toast = new bootstrap.Toast(wrapper, { delay: timeout });
                 toast.show();
-                // Remover elemento cuando termine
                 wrapper.addEventListener('hidden.bs.toast', () => wrapper.remove());
             } else {
-                // fallback: desaparecer con timeout
                 setTimeout(() => wrapper.remove(), timeout);
             }
         }
@@ -155,21 +153,16 @@
                 const html = await res.text();
                 document.getElementById('coleModalBody').innerHTML = html;
 
-                // Establecer título
                 document.getElementById('coleModalTitle').textContent = id && id !== 0 ? 'Editar / Ver Colegio' : 'Nuevo Colegio';
 
-                // Adjuntar manejador de envío al form cargado (el partial contiene form con id="formColegio")
                 const form = document.getElementById('formColegio');
                 if (form) {
-                    // Remover posibles listeners previos
                     form.removeEventListener('submit', submitColegioForm);
                     form.addEventListener('submit', submitColegioForm);
                 }
 
-                // Inicializar validación si el partial provee la función
                 if (typeof setupColegioValidation === 'function') setupColegioValidation();
 
-                // Mostrar modal
                 coleModal?.show();
             } catch (err) {
                 console.error(err);
@@ -177,11 +170,9 @@
             }
         }
 
-        // Callback global que puede usar el partial al guardar (partial llama a onColegioSaved)
         function onColegioSaved(message = 'Guardado correctamente') {
             coleModal?.hide();
             showAlert('success', message, 2500);
-            // refrescar lista después de una pequeña demora para que el usuario vea el mensaje
             setTimeout(() => location.reload(), 800);
         }
 
@@ -212,14 +203,13 @@
 
                 const data = await res.json();
                 if (data.success) {
-                    // Usar el helper para mostrar mensaje y refrescar
                     onColegioSaved(data.message || 'Guardado correctamente');
                 } else {
                     showAlert('danger', data.message || 'Error al guardar.', 5000);
                 }
             } catch (err) {
                 console.error(err);
-                showAlert('danger', err.message || 'Error de red al guardar.', 5000);
+                showAlert('danger', err.message || 'Error de red al eliminar.', 5000);
             }
         }
 
@@ -238,7 +228,6 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    // Mostrar mensaje y eliminar fila sin recargar
                     showAlert('success', data.message || 'Eliminado correctamente', 2500);
                     const row = document.getElementById(`row-${id}`);
                     row?.remove();

@@ -8,14 +8,93 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
-    
 
+    <style>
+        /* Paleta moderna: degradado principal + tonos neutros */
+        :root{
+            --brand-1: #0f172a; /* azul oscuro */
+            --brand-2: #0ea5a4; /* teal */
+            --accent: #7c3aed;  /* morado suave */
+            --bg: #f4f7fb;
+            --card-bg: #ffffff;
+            --muted: #6b7280;
+        }
+
+        body {
+            background: var(--bg);
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navbar moderno */
+        .app-navbar {
+            background: linear-gradient(90deg, var(--brand-1) 0%, var(--brand-2) 100%);
+        }
+        .app-navbar .navbar-brand {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        .app-navbar .nav-link {
+            color: rgba(255,255,255,0.9);
+            transition: color .15s ease, transform .08s ease;
+        }
+        .app-navbar .nav-link:hover {
+            color: #fff;
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+        .app-navbar .navbar-toggler {
+            border-color: rgba(255,255,255,0.12);
+        }
+        .app-navbar .navbar-toggler-icon {
+            filter: invert(1) sepia(0.2) saturate(6) hue-rotate(150deg);
+        }
+
+        /* Contenedor principal con "card" ligera */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+            padding: 1.75rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer moderno */
+        footer.site-footer {
+            background: linear-gradient(180deg, #0f172a 0%, #071428 100%);
+            color: rgba(255,255,255,0.85);
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+        footer.site-footer a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: underline;
+        }
+        .brand-badge {
+            display:inline-block;
+            padding: .25rem .5rem;
+            border-radius: .35rem;
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            font-weight:600;
+            font-size: .95rem;
+        }
+
+        /* Ajustes responsivos y estéticos */
+        .navbar .nav-item + .nav-item { margin-left: .25rem; }
+        .container-main { max-width: 1100px; }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark app-navbar border-bottom mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Web</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-badge">ProyectoMVC</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,39 +102,48 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="Index">Producto</a>
+                            <a class="nav-link" asp-area="" asp-controller="Producto" asp-action="Index">Producto</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProductoAjax" asp-action="Index">Producto AJax</a>
+                            <a class="nav-link" asp-area="" asp-controller="ProductoAjax" asp-action="Index">Producto Ajax</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Colegio" asp-action="Index">Colegio</a>
+                            <a class="nav-link" asp-area="" asp-controller="Colegio" asp-action="Index">Colegio</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="ColegioAjax" asp-action="Index">Colegio Ajax</a>
+                            <a class="nav-link" asp-area="" asp-controller="ColegioAjax" asp-action="Index">Colegio Ajax</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container container-main">
         <main role="main" class="pb-3">
-            @RenderBody()
+            <div class="content-card">
+                @RenderBody()
+            </div>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="site-footer">
+        <div class="container container-main d-flex justify-content-between align-items-center">
+            <div>
+                <small>&copy; 2025 - Taller de Aplicaciones Web</small>
+            </div>
+            <div>
+                <small>Desarrollado por  <span style="color:var(--accent)">Percy Rojas</span> — <a asp-area="" asp-controller="Home" asp-action="Privacy">Todos los Derechos Reservados</a></small>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
