@@ -3,22 +3,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Services;
 
+
 namespace Web.Controllers
 {
-    public class ProductoController : Controller
-    {
-        private readonly IProductoService _service;
 
-        public ProductoController(IProductoService service)
+    public class MatriculaController : Controller
+    {
+        private readonly IMatriculaService _service;
+
+        public MatriculaController(IMatriculaService service)
         {
             _service = service;
         }
 
         public async Task<IActionResult> Index()
         {
-            var productos = await _service.GetAllAsync();
-            return View(productos);
+            var matricula = await _service.GetAllAsync();
+            return View(matricula);
         }
+
 
         public IActionResult Create()
         {
@@ -27,44 +30,38 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Producto producto)
+        public async Task<IActionResult> Create(Matricula matricula)
         {
             if (!ModelState.IsValid)
-                return View(producto);
+                return View(matricula);
 
-            await _service.AddAsync(producto);
+            await _service.AddAsync(matricula);
             return RedirectToAction(nameof(Index));
         }
 
+
         public async Task<IActionResult> Edit(int id)
         {
-            var producto = await _service.GetByIdAsync(id);
-            if (producto == null) return NotFound();
-            return View(producto);
+            var matricula = await _service.GetByIdAsync(id);
+            if (matricula == null) return NotFound();
+            return View(matricula);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Producto producto)
+        public async Task<IActionResult> Edit(Matricula matricula)
         {
             if (!ModelState.IsValid)
-                return View(producto);
+                return View(matricula);
 
-            await _service.UpdateAsync(producto);
+            await _service.UpdateAsync(matricula);
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            /*
-
-             var producto = await _service.GetByIdAsync(id);
-             if (producto == null) return NotFound();
-             return View(producto);
-            */
             await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
-
         }
 
         [HttpPost, ActionName("Delete")]
@@ -75,4 +72,7 @@ namespace Web.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
+
 }
+
+   

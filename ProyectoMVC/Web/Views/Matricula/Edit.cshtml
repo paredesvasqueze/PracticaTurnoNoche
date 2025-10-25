@@ -1,0 +1,52 @@
+﻿@model Models.Matricula
+@*
+  ViewData["Title"] = "Editar Matricula";  
+*@
+@{
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    @* Campo oculto para mantener el Id del producto *@
+    <input type="hidden" asp-for="IdMatricula" />
+
+    <div class="form-group">
+        <label asp-for="IdAlumno"></label>
+        <input asp-for="IdAlumno" class="form-control" />
+        <span asp-validation-for="IdAlumno" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IdGrado"></label>
+        <input asp-for="IdGrado" class="form-control" />
+        <span asp-validation-for="IdGrado" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaMatricula"></label>
+        <input asp-for="FechaMatricula" class="form-control" />
+        <span asp-validation-for="FechaMatricula" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AñoLectivo"></label>
+        <input asp-for="AñoLectivo" class="form-control" />
+        <span asp-validation-for="AñoLectivo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-md-4 d-flex align-items-center">
+        <div class="form-check">
+            <input asp-for="Estado" class="form-check-input" />
+            <label asp-for="Estado" class="form-check-label"></label>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

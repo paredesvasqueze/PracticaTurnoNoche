@@ -11,71 +11,67 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class ProductoRepository : IProductoRepository
+    public class MatriculaRepository : IMatriculaRepository
     {
         private readonly string _connectionString;
-
-        public ProductoRepository(IConfiguration configuration)
+        public MatriculaRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-
-        public async Task<IEnumerable<Producto>> GetAllAsync()
+        public async Task<IEnumerable<Matricula>> GetAllAsync()
         {
             using var conn = new SqlConnection(_connectionString);
-            return await conn.QueryAsync<Producto>(
-                "sp_Producto_GetAll",
+            return await conn.QueryAsync<Matricula>(
+                "sp_Matricula_GetAll",
                 commandType: CommandType.StoredProcedure
             );
         }
-
-        public async Task<Producto> GetByIdAsync(int id)
+        public async Task<Matricula> GetByIdAsync(int id)
         {
             using var conn = new SqlConnection(_connectionString);
-            return await conn.QueryFirstOrDefaultAsync<Producto>(
-                "sp_Producto_GetById",
-                new { Id = id },
+            return await conn.QueryFirstOrDefaultAsync<Matricula>(
+                "sp_Matricula_GetById",
+                new { IdMatricula = id },
                 commandType: CommandType.StoredProcedure
             );
         }
-
-        public async Task AddAsync(Producto producto)
+        public async Task AddAsync(Matricula matricula)
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.ExecuteAsync(
-                "sp_Producto_Insert",
+                "sp_Matricula_Insert",
                 new { 
-                    producto.Nombre, 
-                    producto.Descripcion, 
-                    producto.Precio, 
-                    producto.Stock
+                    matricula.IdAlumno, 
+                    matricula.IdGrado, 
+                    matricula.FechaMatricula,
+                    matricula.AñoLectivo,
+                    matricula.Estado
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
-
-        public async Task UpdateAsync(Producto producto)
+        public async Task UpdateAsync(Matricula matricula)
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.ExecuteAsync(
-                "sp_Producto_Update",
-                new { 
-                    producto.Id, 
-                    producto.Nombre, 
-                    producto.Descripcion, 
-                    producto.Precio, 
-                    producto.Stock
+                "sp_Matricula_Update",
+                new {
+                    matricula.IdMatricula, 
+                    matricula.IdAlumno, 
+                    matricula.IdGrado, 
+                    matricula.FechaMatricula,
+                    matricula.AñoLectivo,
+                    matricula.Estado
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
-
         public async Task DeleteAsync(int id)
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.ExecuteAsync(
-                "sp_Producto_Delete",
-                new { Id = id },
+                "sp_Matricula_Delete",
+                new { IdMatricula = id },
                 commandType: CommandType.StoredProcedure
             );
         }

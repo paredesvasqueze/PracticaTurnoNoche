@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Models.Matricula>
+@*
+   ViewData["Title"] = "Listado de Matricula";
+*@
+@{
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+
+    <div class="text-end mb-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nueva Matricula
+        </a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>IDMatricula</th>
+                <th>IDAlumno</th>
+                <th>IDGrado</th>
+                <th>FechaMatricula</th>
+                <th>Año Lectivo</th>
+                <th>Estado</th>
+                <th style="width:180px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.IdMatricula</td>
+                        <td>@item.IdAlumno</td>
+                        <td>@item.IdGrado</td>
+                        <td>@item.FechaMatricula</td>
+                        <td>@item.AñoLectivo</td>
+						<td>@item.Estado</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdMatricula" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.IdMatricula" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.IdMatricula" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No hay matriculas registrados.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
